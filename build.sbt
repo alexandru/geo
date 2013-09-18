@@ -2,7 +2,7 @@ name := "geo"
 
 organization in ThisBuild := "com.bionicspirit"
 
-version in ThisBuild := "0.1"
+version in ThisBuild := "0.1.2"
 
 scalaVersion in ThisBuild := "2.10.2"
 

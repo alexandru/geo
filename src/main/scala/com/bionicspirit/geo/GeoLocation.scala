@@ -13,8 +13,14 @@ trait GeoLocation {
   def dmaCode: Option[Int]
 }
 
+trait GeoIPLocation extends GeoLocation {
+  def address: String
+  def isIPv4: Boolean
+  def isIPv6: Boolean
+}
+
 case class GeoIPv4Location(
-  ipv4: String,
+  address: String,
   countryAlpha2: String,
   countryAlpha3: String,
   city: Option[String],
@@ -25,10 +31,13 @@ case class GeoIPv4Location(
   postalCode: Option[String],
   region: Option[String],
   dmaCode: Option[Int]
-) extends GeoLocation
+) extends GeoIPLocation {
+  val isIPv4 = true
+  val isIPv6 = false
+}
 
 case class GeoIPv6Location(
-  ipv6: String,
+  address: String,
   countryAlpha2: String,
   countryAlpha3: String,
   city: Option[String],
@@ -39,5 +48,8 @@ case class GeoIPv6Location(
   postalCode: Option[String],
   region: Option[String],
   dmaCode: Option[Int]
-) extends GeoLocation
+) extends GeoIPLocation {
+  val isIPv4 = false
+  val isIPv6 = true
+}
 

@@ -10,8 +10,8 @@ trait GeoIP {
   def searchIPv4(ip: String): Option[GeoIPv4Location]
   def searchIPv6(address: InetAddress): Option[GeoIPv6Location]
   def searchIPv6(ip: String): Option[GeoIPv6Location]
-  def searchIP(address: InetAddress): Option[GeoLocation]
-  def searchIP(ip: String): Option[GeoLocation]
+  def searchIP(address: InetAddress): Option[GeoIPLocation]
+  def searchIP(ip: String): Option[GeoIPLocation]
 }
 
 object GeoIP {
@@ -27,7 +27,7 @@ object GeoIP {
         val locOpt = Option(ipv4Service.getLocation(ip))
         for (loc <- locOpt; alpha3 <- countries.alpha2ToAlpha3.get(loc.countryCode.toLowerCase)) yield
           GeoIPv4Location(
-            ipv4 = ip,
+            address = ip,
             countryAlpha2 = loc.countryCode.toLowerCase,
             countryAlpha3 = alpha3.toLowerCase,
             countryName = Option(loc.countryName),
@@ -52,7 +52,7 @@ object GeoIP {
     def searchIPv6(ip: String): Option[GeoIPv6Location] =
       for (s <- ipv6Service; loc <- Option(s.getLocationV6(ip)); alpha3 <- countries.alpha2ToAlpha3.get(loc.countryCode.toLowerCase)) yield
         GeoIPv6Location(
-          ipv6 = ip,
+          address = ip,
           countryAlpha2 = loc.countryCode.toLowerCase,
           countryAlpha3 = alpha3.toLowerCase,
           countryName = Option(loc.countryName),
@@ -65,7 +65,7 @@ object GeoIP {
           dmaCode = Option(loc.dma_code)
         )
 
-    def searchIP(address: InetAddress): Option[GeoLocation] =
+    def searchIP(address: InetAddress): Option[GeoIPLocation] =
       try
         if (address.isInstanceOf[Inet6Address])
           searchIPv6(address)
@@ -76,7 +76,7 @@ object GeoIP {
           None
       }
 
-    def searchIP(ip: String): Option[GeoLocation] = ip match {
+    def searchIP(ip: String): Option[GeoIPLocation] = ip match {
       case IPv4Format() =>
         searchIPv4(ip)
       case _ =>
